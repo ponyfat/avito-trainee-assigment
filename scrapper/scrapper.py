@@ -6,7 +6,7 @@ import os
 import logging
 
 URL = "https://www.avito.ru"
-QUESTIONING_INTERVAL = 60  # time between two counts scrappings, seconds
+QUESTIONING_INTERVAL = 3 * 60  # time between two counts scrappings, seconds
 
 logging.basicConfig(filename="scrapper.log", level=logging.DEBUG)
 client = MongoClient(os.environ["MONGODB_HOSTNAME"], 27017)

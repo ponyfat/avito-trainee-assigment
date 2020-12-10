@@ -1,3 +1,4 @@
+from typing import List
 from bs4 import BeautifulSoup
 import requests
 import logging
@@ -9,12 +10,15 @@ URL = "https://www.avito.ru"
 logging.basicConfig(filename='advertisement_scrapper.log', level=logging.DEBUG)
 
 
-def get_top_advertisements(region: str, query: str) -> str:
+def get_top_advertisements(region: str, query: str) -> List[str]:
     logging.info(f"Posted a top advertisements request for {region} {query}")
     r = requests.get(f"{URL}/{region}?q={query}")
     soup = BeautifulSoup(r.text, features="html.parser")
     advertisements = soup.find_all("div", {"data-marker": "item"})
-    return [advertisement.find('a')['href'] for advertisement in advertisements[:5]]
+    if not advertisements:
+        return []
+    return [f"{URL}{advertisement.find('a')['href']}" for advertisement
+            in advertisements[:min(5, len(advertisements))]]
 
 
 def scrap_top_advertisements(id: ObjectId, region: str,
